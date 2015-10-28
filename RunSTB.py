@@ -7,6 +7,7 @@ import sys
 import time
 import termios
 import fcntl
+import time
 
 import numpy as np
 import hapticsstb
@@ -74,6 +75,7 @@ else:
     sample_length = sensor.sample_rate*sample_time
 
 sensor_hist = np.zeros((sample_length, 15))
+times = np.zeros((sample_length, 1))
 
 print '*'*80
 print "Biasing, make sure board is clear"
@@ -125,6 +127,7 @@ while True: # Runs once if args.pedal is false
         sensor.start_sampling()
 
         for ii in range(0,sample_length):
+            times[ii] = time.time()
             sensor_hist[ii, 0:15] = sensor.read_data()
             if args.plot:
                 sensor.plot_update()
@@ -163,7 +166,12 @@ while True: # Runs once if args.pedal is false
     sensor.stop_sampling()
     
     if args.write:
-        np.savetxt(test_filename + '.csv', sensor_hist[:(ii+1),0:15], delimiter=",")
+        np.savetxt(test_filename + '.csv',
+                   np.hstack((times, sensor_hist[:(ii+1),0:15])),
+                   delimiter=",",
+                   header=",".join(  ["Timestamp"]
+                                   + [a+b for a in "F","T" for b in "x","y","z"]
+                                   + ["Acc"+str(a)+b for a in 1,2,3 for b in "x","y","z"]))
         print 'Finished Writing!'
 
     print '*'*80
