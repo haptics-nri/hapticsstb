@@ -167,7 +167,7 @@ while True: # Runs once if args.pedal is false
     
     if args.write:
         np.savetxt(test_filename + '.csv',
-                   np.hstack((times, sensor_hist[:(ii+1),0:15])),
+                   np.hstack((times[:(ii+1),:], sensor_hist[:(ii+1),0:15])),
                    delimiter=",",
                    header=",".join(  ["Timestamp"]
                                    + [a+b for a in "F","T" for b in "x","y","z"]
