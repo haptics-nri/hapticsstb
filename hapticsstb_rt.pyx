@@ -33,7 +33,7 @@ def serial_m40(str x, np.ndarray[np.float64_t, ndim = 1] bias):
 	for i in range(0,6):
 		j = i*2
 		y = (ord(x[j])<<8) + (ord(x[j+1]))
-		if y > 2048:
+		if y >= 2048:
 			volts[5-i] = <float>(y - 4096)*0.002
 		else:
 			volts[5-i] = <float>y*0.002
@@ -74,7 +74,7 @@ def serial_m40v(str x):
 	for i in range(0,6):
 		j = i*2
 		y = (ord(x[j])<<8) + (ord(x[j+1]))
-		if y > 2048: # This handles the twos complement negatives
+		if y >= 2048: # This handles the twos complement negatives
 			volts[5-i] = <float>(y - 4096)*0.002
 		else:
 			volts[5-i] = <float>y*0.002
